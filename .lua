@@ -14,7 +14,8 @@ local var = {
   boss = {},
   sboss = "Buggy",
   enemys = {},
-  senem = "Bandit"
+  senem = "Bandit",
+  isboss = false
 }
 --game:GetService("ReplicatedStorage")["Enemies"].Leveling Island.Cha
 --game:GetService("ReplicatedStorage")["Boss"].Clown Island.Buggy
@@ -41,6 +42,10 @@ T1:Dropdown("Choose boss",var.boss,function(value)
     var.sboss = value
 end)
 
+T1:Toggle("Boss",false,function(value)
+    var.isboss = value
+end)
+
 T1:Toggle("Auto click",false,function(value)
     var.click = value
     while wait() do
@@ -53,10 +58,15 @@ T1:Toggle("Auto kill",false,function(value)
     var.farm = value
     while wait() do
       if var.farm == false then break end
-      if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
+      if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) and var.isboss == false then
         game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["World"][var.szone][var.senem],["Type"] = "World"})
-      else
+      elseif workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) and var.isboss == true then
+        game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss],["Type"] = "Boss"})
+      elseif not workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
         lib:notify(lib:ColorFonts("Cant find " .. var.senem .. " in " .. var.szone,"Red"),10)
+        var.farm = false
+      elseif not workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
+        lib:notify(lib:ColorFonts("Cant find " .. var.sboss .. " in " .. var.szone,"Red"),10)
         var.farm = false
       end
     end
