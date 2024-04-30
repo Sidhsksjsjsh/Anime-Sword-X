@@ -15,7 +15,11 @@ local var = {
   sboss = "Buggy",
   enemys = {},
   senem = "Bandit",
-  isboss = false
+  isboss = false,
+  best = {
+    pet = false,
+    sword = false
+  }
 }
 --game:GetService("ReplicatedStorage")["Enemies"].Leveling Island.Cha
 --game:GetService("ReplicatedStorage")["Boss"].Clown Island.Buggy
@@ -72,6 +76,14 @@ T1:Toggle("Auto kill",false,function(value)
     end
 end)
 
+T1:Toggle("Auto equip best swords every 1s",false,function(value)
+    var.best.sword = value
+    while wait(1) do
+      if var.best.sword == false then break end
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Swords","Best")
+    end
+end)
+
 T2:Dropdown("Choose island to open a egg",var.zone,function(value)
     var.ezone = value
 end)
@@ -81,6 +93,14 @@ T2:Toggle("Auto open",false,function(value)
     while wait() do
       if var.egg == false then break end
       game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Stars","Roll",{["Map"] = var.ezone,["Type"] = "Open"})
+    end
+end)
+
+T2:Toggle("Auto equip best pets every 1s",false,function(value)
+    var.best.pet = value
+    while wait(1) do
+      if var.best.pet == false then break end
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Pets","Best")
     end
 end)
 
