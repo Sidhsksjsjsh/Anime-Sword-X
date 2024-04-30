@@ -48,3 +48,18 @@ T2:Toggle("Auto open",false,function(value)
       game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Stars","Roll",{["Map"] = var.ezone,["Type"] = "Open"})
     end
 end)
+
+lib:DeveloperAccess(function()
+    local T100 = wndw:Tab("Developer")
+    T100:Button("Remote spy",function()
+        lib:RemoteSpy()
+    end)
+
+    T100:Button("Dex",function()
+        lib:DEX()
+    end)
+
+    T100:Button("Turtle Explorer",function()
+        lib:TurtleExplorer()
+    end)
+end)
