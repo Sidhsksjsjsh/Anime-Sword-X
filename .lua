@@ -2,6 +2,8 @@ local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Sidhsksjs
 local wndw = lib:Window("VIP Turtle Hub V4")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Hatch")
+local T3 = wndw:Tab("Dungeon")
+local hisis = T1:Label(lib:ColorFonts("Cannot run Health Indicators","Red"))
 
 local workspace = game:GetService("Workspace")
 local var = {
@@ -19,6 +21,13 @@ local var = {
   best = {
     pet = false,
     sword = false
+  },
+  rank = false,
+  dngn = {
+    se = "Bandit",
+    toggle = false,
+    zone = "Clown Island",
+    isfor = "Public"
   }
 }
 --game:GetService("ReplicatedStorage")["Enemies"].Leveling Island.Cha
@@ -78,9 +87,21 @@ end)
 
 T1:Toggle("Auto equip best swords every 1s",false,function(value)
     var.best.sword = value
+    if value == true then
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Swords","Best")
+    end
+    
     while wait(1) do
       if var.best.sword == false then break end
       game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Swords","Best")
+    end
+end)
+
+T1:Toggle("Auto rank up",false,function(value)
+    var.rank = value
+    while wait() do
+      if var.rank == false then break end
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("RankUp","Evolve")
     end
 end)
 
@@ -98,9 +119,38 @@ end)
 
 T2:Toggle("Auto equip best pets every 1s",false,function(value)
     var.best.pet = value
+    if value == true then
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Pets","Best")
+    end
+    
     while wait(1) do
       if var.best.pet == false then break end
       game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Pets","Best")
+    end
+end)
+
+T3:Dropdown("Who can access it",{"Public","Friend"},function(value)
+    var.dngn.isfor = value
+end)
+
+T3:Dropdown("Choose enemy",var.enemys,function(value)
+    var.dngn.se = value
+end)
+
+T3:Button("Create room",function()
+    game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Dungeon","Start",var.dngn.isfor)
+end)
+
+T3:Toggle("Auto kill",false,function(value)
+    var.dngn.toggle = value
+    while wait() do
+      if var.dngn.toggle == false then break end
+      if workspace["Server"]["Enemies"]["Dungeon"]["Leveling Island"]:FindFirstChild(var.dngn.se) then
+        game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["Dungeon"]["Leveling Island"][var.dngn.se],["Type"] = "Dungeon"})
+      else
+        lib:notify(lib:ColorFonts("Cannot found " .. var.dngn.se .. " in the dungeon","Red"),10) --Can't find Hyung in the dungeon
+        var.dngn.toggle = false
+      end
     end
 end)
 
@@ -117,4 +167,14 @@ lib:DeveloperAccess(function()
     T100:Button("Turtle Explorer",function()
         lib:TurtleExplorer()
     end)
+end)
+
+lib:runtime(function()
+    if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
+      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"] .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"])
+    elseif workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
+      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"] .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"])
+    else
+      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#BOSS_OR_ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_") .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
+    end
 end)
