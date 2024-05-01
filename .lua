@@ -175,6 +175,6 @@ lib:runtime(function()
     elseif workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
       hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"] .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"])
     else
-      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#BOSS_OR_ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_") .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
+      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#BOSS_OR_ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")) .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
     end
 end)
