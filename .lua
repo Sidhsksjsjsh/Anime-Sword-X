@@ -114,7 +114,7 @@ T6:Dropdown("Choose boss",var.boss,function(value)
     var.sboss = value
 end)
 
-T6:Toggle("Boss",false,function(value)
+T6:Toggle("Auto swing boss",false,function(value)
 	var.isboss = value
 	while wait() do
 	if var.isboss == false then break end
@@ -135,7 +135,7 @@ T1:Toggle("Auto click",false,function(value)
     end
 end)
 
-T1:Toggle("Auto kill",false,function(value)
+T1:Toggle("Auto swing enemy",false,function(value)
     var.farm = value
     while wait() do
       if var.farm == false then break end
@@ -223,6 +223,10 @@ T3:Toggle("Auto kill",false,function(value)
         var.dngn.toggle = false
       end
     end
+end)
+
+T6:Button("Enter cursed boss",function()
+	game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Boss","Start","CursedBoss")
 end)
 
 lib:DeveloperAccess(function()
