@@ -248,11 +248,11 @@ lib:runtime(function()
     if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
       hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"]))
     else
-      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")) .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
+      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
     end
     if workspace["Server"]["Enemies"]["Boss"][var.bzone]:FindFirstChild(var.sboss) then
       bossh:EditLabel(lib:ColorFonts(var.sboss,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.bzone][var.sboss]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.bzone][var.sboss]["MaxHealth"]["Value"]))
     else
-      bossh:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1890\n#BOSS_NOT_FOUND\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.bzone:gsub(" ","_")))
+      bossh:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1890\n#BOSS_NOT_FOUND\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.bzone:gsub(" ","_")),"Red"))
     end
 end)
