@@ -3,7 +3,12 @@ local wndw = lib:Window("VIP Turtle Hub V4")
 local T1 = wndw:Tab("Main")
 local T2 = wndw:Tab("Hatch")
 local T3 = wndw:Tab("Dungeon")
+local T4 = wndw:Tab("Solo Status")
+local T5 = wndw:Tab("Achievement")
+local T6 = wndw:Tab("Boss")
+
 local hisis = T1:Label(lib:ColorFonts("Cannot run Health Indicators","Red"))
+local bossh = T6:Label(lib:ColorFonts("Cannot run Health Indicators","Red"))
 
 local workspace = game:GetService("Workspace")
 local var = {
@@ -29,7 +34,17 @@ local var = {
     zone = "Clown Island",
     isfor = "Public"
   },
-  shadow = false
+  shadow = false,
+  solo = {
+	table = {"Energy","Lucky","Damage","Gems","Rank XP"},
+	s = "Energy",
+	toggle = false
+  },
+  ach = {
+	name = "Star I",
+	toggle = false
+  },
+  bzone = "Clown Island"
 }
 --game:GetService("ReplicatedStorage")["Enemies"].Leveling Island.Cha
 --game:GetService("ReplicatedStorage")["Boss"].Clown Island.Buggy
@@ -59,6 +74,30 @@ lib:children(game:GetService("ReplicatedStorage")["Boss"],function(v)
     lib:AddTable(v,var.boss)
 end)
 
+T5:Textbox("Insert achievement name",true,function(value)
+	var.ach.name = value
+end)
+
+T5:Toggle("Auto redeem",false,function(value)
+	var.ach.toggle = value
+	while wait() do
+	if var.ach.toggle == false then break end
+		game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Achievements","Redeem",var.ach.name)
+	end
+end)
+
+T4:Dropdown("Choose solo status",var.solo.table,function(value)
+	var.solo.s = value
+end)
+
+T4:Toggle("Auto upgrade",false,function(value)
+	var.solo.toggle = value
+	while wait() do
+	if var.solo.toggle == false then break end
+		game:GetService("ReplicatedStorage")["Bridge"]:FireServer("SoloStatus","Add",var.solo.s)
+	end
+end)
+
 T1:Dropdown("Choose island to farm",var.zone,function(value)
     var.szone = value
 end)
@@ -67,12 +106,25 @@ T1:Dropdown("Choose enemy",var.enemys,function(value)
     var.senem = value
 end)
 
-T1:Dropdown("Choose boss",var.boss,function(value)
+T6:Dropdown("Choose island to farm",var.zone,function(value)
+    var.bzone = value
+end)
+
+T6:Dropdown("Choose boss",var.boss,function(value)
     var.sboss = value
 end)
 
-T1:Toggle("Boss",false,function(value)
-    var.isboss = value
+T6:Toggle("Boss",false,function(value)
+	var.isboss = value
+	while wait() do
+	if var.isboss == false then break end
+		if workspace["Server"]["Enemies"]["Boss"][var.bzone]:FindFirstChild(var.sboss) then
+			game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["Boss"][var.bzone][var.sboss],["Type"] = "Boss"})
+		else
+			lib:notify(lib:ColorFonts("Cant find " .. var.sboss .. " in " .. var.bzone,"Red"),10)
+			var.isboss = false
+		end
+	end
 end)
 
 T1:Toggle("Auto click",false,function(value)
@@ -87,16 +139,11 @@ T1:Toggle("Auto kill",false,function(value)
     var.farm = value
     while wait() do
       if var.farm == false then break end
-      if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) and var.isboss == false then
-        game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["World"][var.szone][var.senem],["Type"] = "World"})
-      elseif workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) and var.isboss == true then
-        game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss],["Type"] = "Boss"})
-      elseif not workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
-        lib:notify(lib:ColorFonts("Cant find " .. var.senem .. " in " .. var.szone,"Red"),10)
-        var.farm = false
-      elseif not workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
-        lib:notify(lib:ColorFonts("Cant find " .. var.sboss .. " in " .. var.szone,"Red"),10)
-        var.farm = false
+      if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
+		game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Attack","Click",{["Enemy"] = workspace["Server"]["Enemies"]["World"][var.szone][var.senem],["Type"] = "World"})
+	else
+		lib:notify(lib:ColorFonts("Cant find " .. var.senem .. " in " .. var.szone,"Red"),10)
+		var.farm = false
       end
     end
 end)
@@ -194,9 +241,14 @@ lib:DeveloperAccess(function()
 end)
 
 lib:runtime(function()
-    if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) and workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
-      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"]) .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["MaxHealth"]["Value"]))
+    if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) then
+      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"]))
     else
-      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#BOSS_OR_ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")) .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
+      hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")) .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
+    end
+    if workspace["Server"]["Enemies"]["Boss"][var.bzone]:FindFirstChild(var.sboss) then
+      bossh:EditLabel(lib:ColorFonts(var.sboss,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.bzone][var.sboss]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.bzone][var.sboss]["MaxHealth"]["Value"]))
+    else
+      bossh:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1890\n#BOSS_NOT_FOUND\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.bzone:gsub(" ","_")))
     end
 end)
