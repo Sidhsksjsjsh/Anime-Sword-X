@@ -184,7 +184,7 @@ T2:Toggle("Auto open",false,function(value)
     var.egg = value
     while wait() do
       if var.egg == false then break end
-      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Stars","Roll",{["Map"] = var.ezone,["Type"] = "Open"})
+      game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Stars","Roll",{["Map"] = var.ezone,["Type"] = "Multi"})
     end
 end)
 
@@ -223,6 +223,10 @@ T3:Toggle("Auto kill",false,function(value)
         var.dngn.toggle = false
       end
     end
+end)
+
+T6:Button("Enter cake boss",function()
+	game:GetService("ReplicatedStorage")["Bridge"]:FireServer("Boss","Start","CakeBoss")
 end)
 
 T6:Button("Enter cursed boss",function()
