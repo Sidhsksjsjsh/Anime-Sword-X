@@ -42,8 +42,8 @@ end
 
 local function formatNumber(x: number): string 
 	if math.abs(x) < 1000 then
-    return tostring(x)
-  end 
+		return tostring(x)
+	end 
 	local p = math.min(math.floor(math.log10(math.abs(x))/3),#names)
 	local num = math.floor(math.abs(x)/pows[p]*100)/100
 	return num * math.sign(x) .. names[p]
