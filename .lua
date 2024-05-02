@@ -34,6 +34,21 @@ local var = {
 --game:GetService("ReplicatedStorage")["Enemies"].Leveling Island.Cha
 --game:GetService("ReplicatedStorage")["Boss"].Clown Island.Buggy
 
+local names = {"K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dd","Ud","Dd","Td","Qad","Qid","Sxd","Spd","Ocd","Nod","Vg","Uvg","Dvg","Tvg","Qavg","Qivg","Sxvg","Spvg","Ocvg"}
+local pows = {}
+for i = 1,#names do 
+  table.insert(pows,1000^i)
+end
+
+local function formatNumber(x: number): string 
+	if math.abs(x) < 1000 then
+    return tostring(x)
+  end 
+	local p = math.min(math.floor(math.log10(math.abs(x))/3),#names)
+	local num = math.floor(math.abs(x)/pows[p]*100)/100
+	return num * math.sign(x) .. names[p]
+end
+
 lib:AddTable(workspace["Server"]["Enemies"]["World"],var.zone)
 
 lib:children(game:GetService("ReplicatedStorage")["Enemies"],function(v)
@@ -180,7 +195,7 @@ end)
 
 lib:runtime(function()
     if workspace["Server"]["Enemies"]["World"][var.szone]:FindFirstChild(var.senem) and workspace["Server"]["Enemies"]["Boss"][var.szone]:FindFirstChild(var.sboss) then
-      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"] .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. math.floor(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. "/" .. workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["MaxHealth"]["Value"])
+      hisis:EditLabel(lib:ColorFonts(var.senem,"Red") .. "'s Health\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["World"][var.szone][var.senem]["MaxHealth"]["Value"]) .. "\n-----------------\n" .. lib:ColorFonts(var.sboss,"Red") .. "' Health (BOSS)\nHealth : " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["Health"]["Value"]) .. " / " .. formatNumber(workspace["Server"]["Enemies"]["Boss"][var.szone][var.sboss]["MaxHealth"]["Value"]))
     else
       hisis:EditLabel(lib:ColorFonts("#ERROR_OCCURED_IN_LINE_1746\n#BOSS_OR_ENEMY_NOT_FOUND\n#" .. string.upper(var.senem:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")) .. "\n#" .. string.upper(var.sboss:gsub(" ","_")) .. "_IS_NOT_A_VALID_MEMBER_OF_" .. string.upper(var.szone:gsub(" ","_")),"Red"))
     end
